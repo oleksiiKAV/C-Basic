@@ -1,6 +1,6 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-
+using OpenQA.Selenium.Support.UI;
 using WebDriverManager.DriverConfigs.Impl;
 
 namespace TestProject1
@@ -15,6 +15,8 @@ namespace TestProject1
             new WebDriverManager.DriverManager().SetUpDriver(new ChromeConfig());
             driver = new ChromeDriver();
             driver.Manage().Window.Maximize(); // maximize window size
+            // Implicit wailt 5 seconds can be set globally
+            //driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
             /*new WebDriverManager.DriverManager().SetUpDriver(new FirefoxConfig());
             driver = new FirefoxDriver();
             driver.Manage().Window.Maximize(); // maximize window size*/
@@ -30,7 +32,14 @@ namespace TestProject1
             driver.FindElement(By.XPath("//div[@class='form-group'][5]/label/span/input")).Click();
             driver.FindElement(By.CssSelector("input[value = 'Sign In']")).Click();
             //driver.FindElement(By.XPath("//input[@value = 'Sign In']")).Click();
-            Thread.Sleep(3000);
+
+            // Thread.Sleep(3000); - don't recomended
+            // explicit wait
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(8));
+            wait.Until(SeleniumExtras.WaitHelpers
+                .ExpectedConditions
+                .TextToBePresentInElementValue(driver.FindElement(By.Id("signInBtn")), "Sign In"));
+            // explicit wait
             String errMess = driver.FindElement(By.ClassName("alert-danger")).Text;
             TestContext.Progress.WriteLine($"Title is: {driver.Title}");
             
@@ -40,7 +49,8 @@ namespace TestProject1
             String linkAttr = link.GetAttribute("href");
             String expectedAttr = "https://rahulshettyacademy.com/documents-request";
 
-            Assert.AreEqual(expectedAttr, actual: linkAttr);
+            // Assert.AreEqual(expectedAttr, actual: linkAttr);
+            Assert.That(linkAttr, Is.EqualTo(expectedAttr));
         }
 
         [Test]
@@ -55,7 +65,7 @@ namespace TestProject1
         {
             TestContext.Progress.WriteLine("Testing post-condition");
             driver.Close(); // Close current open window
-            // driver.Quit(); - close All tests window 029052720
+            // driver.Quit(); - close All tests window
         }
     }
 }
