@@ -7,8 +7,8 @@
     using OpenQA.Selenium.Support.UI;
     using WebDriverManager.DriverConfigs.Impl;
 
-    namespace SeleniumLearning
-    {
+    namespace TestProject1
+{
         public class E2ETest
         {
 
@@ -32,7 +32,7 @@
 
             {
 
-                String[] expectedProducts = { "iphone X", "Blackberry" };
+                String[] expectedProducts = ["iphone X", "Blackberry"];
             String[] actualProducts = new string[2];
                 driver.FindElement(By.Id("username")).SendKeys("rahulshettyacademy");
                 driver.FindElement(By.Name("password")).SendKeys("learning");
@@ -75,7 +75,7 @@
 
             driver.FindElement(By.CssSelector("label[for*='checkbox2']")).Click();
             driver.FindElement(By.CssSelector("[value='Purchase']")).Click();
-           String confirText= driver.FindElement(By.CssSelector(".alert-success")).Text;
+            String confirText= driver.FindElement(By.CssSelector(".alert-success")).Text;
 
             StringAssert.Contains("Success", confirText);
         }
